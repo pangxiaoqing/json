@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>json三级联动</title>
+	</head>
+	<body>
+		<div id="aaa">
+			
+		</div>
+		==============
+		<div id="bbb">
+		
+		</div>
+		===============	
+		<div id="ccc">
+			
+		</div>
+		<script type="text/javascript" src="jquery-3.1.0.min.js"></script>
+		<script type="text/javascript">
+			var jsonObj = {};
+			var fristObj={};
+			var secondObj={};
+			var getValue = function(res,n2){
+				switch(n2){
+					case 0: 
+					for(var k in res){
+						console.log(k);
+						var name = res[k].name;
+						$("#aaa").append("<div name='"+k+"'>"+name+"</div>");
+					}
+					break;
+					case 1:
+					$("#bbb").html("");
+					for(var k in res){
+						var name = res[k].name;
+						
+						$("#bbb").append("<div name='"+k+"'>"+name+"</div>");
+					}
+					break;
+					case 2:
+					$("#ccc").html("");
+					for(var k in res){
+						var name = res[k];
+						
+						$("#ccc").append("<div name='"+k+"'>"+name+"</div>");
+					}
+					break;
+				}
+				
+			}
+			$("#aaa").on("click","div",function(){
+				var key = $(this).attr("name");
+				console.log(jsonObj[key].group);
+				fristObj = jsonObj[key].group;
+				getValue(fristObj,1)
+//				alert($(this).html())
+//				getValue()
+//				$(this)[n3]
+			});
+			$("#bbb").on("click","div",function(){
+				var key = $(this).attr("name");
+				secondObj= fristObj[key].classification;
+				getValue(secondObj,2);
+			})
+			
+			$.ajax({
+				type:"get",
+				url:"json.json",
+				data:{},
+				dataType:"json",
+				success:function(res){
+//					console.log(res);
+					jsonObj = res;
+					getValue(jsonObj,0)
+					
+				},
+				error:function(e){
+					console.log(e);
+				}
+			});
+		</script>
+	</body>
+</html>
