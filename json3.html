@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>json三级联动</title>
+	</head>
+	<body>
+		<div id="aaa">
+			
+		</div>
+		==============
+		<div id="bbb">
+		
+		</div>
+		===============	
+		<div id="ccc">
+			
+		</div>
+		<script type="text/javascript" src="jquery-3.1.0.min.js"></script>
+		<script type="text/javascript">
+			$.ajax({
+				type:"get",
+				url:"json.json",
+				data:{},
+				dataType:"json",
+				success:function(res){
+					// console.log(res);	
+					// var b_group = {};
+					/*第一层*/
+					for(key in res){
+						$("#aaa").append("<div name='"+key+"'>"+res[key].name+"</div>");
+					}
+					/*第二层*/
+					$("#aaa").on("click","div",function(){
+						var a_name = $(this).attr("name");
+						// console.log(a_name);//fresh,foods,nonFoods
+						var b_group = res[a_name].group;
+						$("#bbb").empty();
+						for(key in b_group){
+							// console.log(b_group[key].name);
+							$("#bbb").append("<div a_name = '"+a_name+"' name='"+key+"'>"+b_group[key].name+"</div>")
+						}
+						
+						
+					})
+					/*第三层*/
+					$("#bbb").on("click","div",function(){
+						var b_name = $(this).attr("name");
+						var c_name = $(this).attr("a_name");
+						// console.log(c_name);
+						// console.log(b_name);//Vegetables
+						var b_group = res[c_name].group;
+						var c_ppp = b_group[b_name].classification;
+						// console.log(c_ppp);//["蔬菜","水果","干货","五谷粮油"]
+						$("#ccc").empty();
+						for(key in c_ppp){
+							// console.log(c_ppp[i]);
+							$("#ccc").append("<div>"+c_ppp[key]+"</div>");
+						}
+					})
+					
+				},
+				error:function(e){
+					console.log(e);
+				}
+			});
+		</script>
+	</body>
+</html>

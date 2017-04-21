@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>json三级联动</title>
+	</head>
+	<body>
+		<div id="aaa">
+			
+		</div>
+		==============
+		<div id="bbb">
+		
+		</div>
+		===============	
+		<div id="ccc">
+			
+		</div>
+		<script type="text/javascript" src="jquery-3.1.0.min.js"></script>
+		<script type="text/javascript">
+			;!function(){
+				var objData ={
+					data:null,
+					arr:[],
+					b_group:{}
+				}
+				$(document.body).click(function(e){
+					var _target = e.target,
+					      _data = objData.data,
+					      _t_data;
+					objData.arr = [];
+					if(_target.nodeName === "DIV"){
+						var _name = $(_target).attr("name");
+						if(_name){
+							if(_data[_name]){
+								$("#ccc").html('')
+								objData.b_group = {supername:_name,list:_data[_name]['group']};
+								for(var index in _data[_name]['group']){
+									objData.arr.push("<div name='"+index+"'>"+ _data[_name]['group'][index].name+"</div>");	
+								}
+								$("#bbb").html(objData.arr.join(''))
+							}else{console.log(111)
+								_t_data = _data[objData.b_group.supername]['group'][$(_target).attr('name')];
+								console.log(_t_data)
+								$(_t_data.classification).each(function(index,element){
+									objData.arr.push("<div>"+element+"</div>")
+								});
+								$("#ccc").html(objData.arr.join(''))
+							}
+						}
+					}
+				})
+
+			$.ajax({
+				type:"get",
+				url:"json.json",
+				data:{},
+				dataType:"json",
+				success:function(res){
+					objData.data = res;
+					
+					for(key in res){
+						$("#aaa").append("<div name='"+key+"'>"+res[key].name+"</div>");
+					}
+				},
+				error:function(e){
+					console.log(e);
+				}
+			});
+			}()
+		</script>
+	</body>
+</html>
